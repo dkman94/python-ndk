@@ -19,9 +19,25 @@ import android.app.Activity;
 import android.widget.TextView;
 import android.os.Bundle;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import android.view.View;
+import android.widget.EditText;
+
 
 public class HelloJni extends Activity
 {
+	private Socket socket;
+	
+	private static final int SERVERPORT = 5000;
+	private static final String SERVER_IP = "128.146.173.138";
+	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -32,9 +48,19 @@ public class HelloJni extends Activity
          * the text is retrieved by calling a native
          * function.
          */
+        new ConnectTask().execute("");
+        
+        if(TcpClient.isConnected)
+        {
+        TcpClient mTcpClient = null;
+		mTcpClient.stopClient();
+        }
+        
         TextView  tv = new TextView(this);
         tv.setText( stringFromJNI() );
         setContentView(tv);
+        
+       
     }
 
     /* A native method that is implemented by the
